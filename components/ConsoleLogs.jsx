@@ -2,7 +2,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useState, useEffect } from "react";
 import { login } from "../utils/puwifi";
 
-const ConsoleLogs = ({ darkMode, username, password, startSpam }) => {
+const ConsoleLogs = ({ username, password, startSpam }) => {
   const [consoleLogs, setConsoleLogs] = useState([]);
 
   function logToConsole(textBool) {
@@ -10,16 +10,17 @@ const ConsoleLogs = ({ darkMode, username, password, startSpam }) => {
   }
   useEffect(() => {
     let intervalId;
+    let consoleVal;
     if (startSpam) {
       try {
         fetch("https://google.com");
-        logToConsole(true);
+        consoleVal = true;
       } catch (error) {
         login(username, password);
-        logToConsole(false);
+        consoleVal = false;
       }
 
-      intervalId = setInterval(() => logToConsole("Connection Good"), 2500);
+      intervalId = setInterval(() => logToConsole(consoleVal), 2500);
     } else {
       clearInterval(intervalId);
     }
@@ -44,6 +45,7 @@ const ConsoleLogs = ({ darkMode, username, password, startSpam }) => {
           flex: 0.3,
         }}>
         {consoleLogs.map((value, index) => {
+          console.log(value);
           {
             return value ? (
               <Text

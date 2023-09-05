@@ -16,11 +16,12 @@ export default function App() {
   function loginHandler() {
     if (!username || !password) {
       setWarnText("Enter username");
-      const intervalId = setInterval(console.log("Warning"), 4000);
-      clearInterval(intervalId);
-      setWarnText("");
+      setTimeout(() => {
+        setWarnText("");
+      }, 4000);
     }
   }
+
   function logoutHandler() {
     logout(username, password);
   }
@@ -36,28 +37,34 @@ export default function App() {
       <TextInput
         placeholder="Username:"
         value={username}
+        defaultValue="200303124278"
         style={styles.textInput}
         onChangeText={(e) => setUsername(e)}
       />
       <TextInput
         placeholder="Password:"
         value={password}
+        defaultValue="bf@44"
         style={styles.textInput}
         onChangeText={(e) => setPassword(e)}
       />
       <View style={styles.authButtons}>
-        <Login
-          onPressLogin={() => {
-            loginHandler();
-            SetStartSpam(true);
-          }}
-        />
-        <Logout
-          onPressLogout={() => {
-            logoutHandler();
-            SetStartSpam(false);
-          }}
-        />
+        {username && password && (
+          <Login
+            onPressLogin={() => {
+              loginHandler();
+              SetStartSpam(true);
+            }}
+          />
+        )}
+        {username && password && (
+          <Logout
+            onPressLogout={() => {
+              logoutHandler();
+              SetStartSpam(false);
+            }}
+          />
+        )}
       </View>
       <Text>{warnText}</Text>
       <View
