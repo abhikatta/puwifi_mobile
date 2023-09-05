@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { StyleSheet, Text, Pressable, View } from "react-native";
 
-const Login = ({ setText, username, password }) => {
+const Login = ({ onPressLogin }) => {
   const [pressedIn, setPressedIn] = useState(false);
 
   return (
     <View>
       <Pressable
-        onPress={() => setText(`Login Pressed${username + password}`)}
+        onPress={onPressLogin}
         onPressIn={() => setPressedIn(true)}
         onPressOut={() => setPressedIn(false)}
         style={[
@@ -19,13 +19,31 @@ const Login = ({ setText, username, password }) => {
     </View>
   );
 };
-const Logout = ({ setText, username, password }) => {
+const DarkMode = ({ toggleDarkMode }) => {
   const [pressedIn, setPressedIn] = useState(false);
 
   return (
     <View>
       <Pressable
-        onPress={() => setText(`Logged out user:${username + password}`)}
+        onPress={toggleDarkMode}
+        onPressIn={() => setPressedIn(true)}
+        onPressOut={() => setPressedIn(false)}
+        style={[
+          buttonStyles.button,
+          pressedIn ? { opacity: 0.4 } : { opacity: 1 },
+        ]}>
+        <Text style={buttonStyles.text}>DarkMode</Text>
+      </Pressable>
+    </View>
+  );
+};
+const Logout = ({ onPressLogout }) => {
+  const [pressedIn, setPressedIn] = useState(false);
+
+  return (
+    <View>
+      <Pressable
+        onPress={onPressLogout}
         onPressIn={() => setPressedIn(true)}
         onPressOut={() => setPressedIn(false)}
         style={[
@@ -37,13 +55,13 @@ const Logout = ({ setText, username, password }) => {
     </View>
   );
 };
-export { Login, Logout };
+export { Login, Logout, DarkMode };
 const buttonStyles = StyleSheet.create({
   button: {
     justifyContent: "center",
     backgroundColor: "#aada99",
     alignContent: "center",
-    marginVertical: 50,
+    marginVertical: 10,
     marginHorizontal: 10,
     height: 50,
     width: 120,

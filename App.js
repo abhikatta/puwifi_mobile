@@ -1,23 +1,38 @@
-import { View, Text, StyleSheet, TextInput, ScrollView } from "react-native";
-import { Login, Logout } from "./components/Butt-ons";
+import { View, Text, StyleSheet, TextInput } from "react-native";
+import { DarkMode, Login, Logout } from "./components/Butt-ons";
 import { useState } from "react";
-
+import ConsoleLogs from "./components/ConsoleLogs";
+import { logout } from "./utils/puwifi";
 export default function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [text, setText] = useState("");
-  const spam = () => {
-    let arra = [];
-    while (true) {
-      arra.push(text);
-    }
-    return arra.map((text, index) => <Text>{text}</Text>);
+  const [warnText, setWarnText] = useState("");
+  const [startSpam, SetStartSpam] = useState(false);
+
+  const [darkMode, setDarkMode] = useState(false);
+  const toggleDarkMode = () => {
+    setDarkMode((prevDarkMode) => !prevDarkMode);
   };
+  function loginHandler() {
+    if (!username || !password) {
+      setWarnText("Enter username");
+      const intervalId = setInterval(console.log("Warning"), 4000);
+      clearInterval(intervalId);
+      setWarnText("");
+    }
+  }
+  function logoutHandler() {
+    logout(username, password);
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={{ color: "#aada99", fontSize: 40, bottom: 100 }}>
-        PuReLogger
-      </Text>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: darkMode ? "black" : "white" },
+      ]}>
+      <Text style={{ color: "#aada99", fontSize: 40 }}>PuReLogger</Text>
+      <DarkMode toggleDarkMode={toggleDarkMode} />
       <TextInput
         placeholder="Username:"
         value={username}
@@ -25,28 +40,50 @@ export default function App() {
         onChangeText={(e) => setUsername(e)}
       />
       <TextInput
-        placeholder="Username:"
+        placeholder="Password:"
         value={password}
         style={styles.textInput}
         onChangeText={(e) => setPassword(e)}
       />
       <View style={styles.authButtons}>
-        <Login username={username} setText={setText} password={password} />
-        <Logout username={username} setText={setText} password={password} />
+        <Login
+          onPressLogin={() => {
+            loginHandler();
+            SetStartSpam(true);
+          }}
+        />
+        <Logout
+          onPressLogout={() => {
+            logoutHandler();
+            SetStartSpam(false);
+          }}
+        />
       </View>
-      {/* <ScrollView style={styles.output}>
-      </ScrollView> */}
-      <Text style={styles.output}>{text}</Text>
+      <Text>{warnText}</Text>
+      <View
+        style={{
+          flex: 1,
+          bottom: 10,
+          marginVertical: 20,
+          alignItems: "center",
+        }}>
+        <ConsoleLogs
+          username={username}
+          password={password}
+          startSpam={startSpam}
+          darkMode={darkMode}
+        />
+      </View>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   authButtons: {
     flexDirection: "row",
   },
   container: {
     backgroundColor: "#000",
+    paddingTop: 100,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
