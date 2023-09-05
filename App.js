@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, ScrollView } from "react-native";
 import { Login, Logout } from "./components/Butt-ons";
 import { useState } from "react";
 
@@ -6,6 +6,13 @@ export default function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [text, setText] = useState("");
+  const spam = () => {
+    let arra = [];
+    while (true) {
+      arra.push(text);
+    }
+    return arra.map((text, index) => <Text>{text}</Text>);
+  };
   return (
     <View style={styles.container}>
       <Text style={{ color: "#aada99", fontSize: 40, bottom: 100 }}>
@@ -27,6 +34,8 @@ export default function App() {
         <Login username={username} setText={setText} password={password} />
         <Logout username={username} setText={setText} password={password} />
       </View>
+      {/* <ScrollView style={styles.output}>
+      </ScrollView> */}
       <Text style={styles.output}>{text}</Text>
     </View>
   );

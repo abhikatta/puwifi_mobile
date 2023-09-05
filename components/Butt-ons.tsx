@@ -25,7 +25,7 @@ const Logout = ({ setText, username, password }) => {
   return (
     <View>
       <Pressable
-        onPress={() => setText(`Login Pressed${username + password}`)}
+        onPress={() => setText(`Logged out user:${username + password}`)}
         onPressIn={() => setPressedIn(true)}
         onPressOut={() => setPressedIn(false)}
         style={[
