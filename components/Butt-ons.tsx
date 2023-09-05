@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { StyleSheet, Text, Pressable, View } from "react-native";
 
-const Login = () => {
+const Login = ({ setText, username, password }) => {
   const [pressedIn, setPressedIn] = useState(false);
+
   return (
     <View>
       <Pressable
-        onPress={() => console.log("pressed Logout")}
-        onPressIn={() => setPressedIn((prevPress) => !prevPress)}
-        onPressOut={() => setPressedIn((prevPress) => !prevPress)}
+        onPress={() => setText(`Login Pressed${username + password}`)}
+        onPressIn={() => setPressedIn(true)}
+        onPressOut={() => setPressedIn(false)}
         style={[
           buttonStyles.button,
           pressedIn ? { opacity: 0.4 } : { opacity: 1 },
@@ -18,19 +19,22 @@ const Login = () => {
     </View>
   );
 };
-const Logout = () => {
+const Logout = ({ setText, username, password }) => {
   const [pressedIn, setPressedIn] = useState(false);
+
   return (
-    <Pressable
-      style={[
-        buttonStyles.button,
-        pressedIn ? { opacity: 0.7 } : { opacity: 1 },
-      ]}
-      onPress={() => console.log("pressed Logout")}
-      onPressIn={() => setPressedIn((prevPress) => !prevPress)}
-      onPressOut={() => setPressedIn((prevPress) => !prevPress)}>
-      <Text style={buttonStyles.text}>Logout</Text>
-    </Pressable>
+    <View>
+      <Pressable
+        onPress={() => setText(`Login Pressed${username + password}`)}
+        onPressIn={() => setPressedIn(true)}
+        onPressOut={() => setPressedIn(false)}
+        style={[
+          buttonStyles.button,
+          pressedIn ? { opacity: 0.4 } : { opacity: 1 },
+        ]}>
+        <Text style={buttonStyles.text}>Logout</Text>
+      </Pressable>
+    </View>
   );
 };
 export { Login, Logout };
@@ -40,8 +44,9 @@ const buttonStyles = StyleSheet.create({
     backgroundColor: "#aada99",
     alignContent: "center",
     marginVertical: 50,
+    marginHorizontal: 10,
     height: 50,
-    width: 200,
+    width: 120,
     borderRadius: 5,
   },
   text: {
