@@ -1,13 +1,30 @@
 import { useState } from "react";
 import { StyleSheet, Text, Pressable, View } from "react-native";
+import { login, logout } from "../utils/puwifi";
 
-const Login = ({ onPressLogin }) => {
+const Login = ({ toggleSpam, username, password }) => {
   const [pressedIn, setPressedIn] = useState(false);
+  const handleLogin = async () => {
+    try {
+      // Call the login function with the provided username and password
+      const response = await login(username, password);
+
+      // Handle the response as needed
+      console.log("Login response:", response);
+
+      // You can also perform navigation or other actions here on successful login
+    } catch (error) {
+      // Handle any errors that occur during login
+      console.warn("LOGIN Error:", error);
+    } finally {
+      toggleSpam(true);
+    }
+  };
 
   return (
     <View>
       <Pressable
-        onPress={onPressLogin}
+        onPress={handleLogin}
         onPressIn={() => setPressedIn(true)}
         onPressOut={() => setPressedIn(false)}
         style={[
@@ -19,7 +36,29 @@ const Login = ({ onPressLogin }) => {
     </View>
   );
 };
-const DarkMode = ({ toggleDarkMode }) => {
+const Logout = ({ toggleSpam, username }) => {
+  const [pressedIn, setPressedIn] = useState(false);
+  const handleLogout = async () => {
+    const response = await logout(username);
+    console.log("Login response:", response);
+    toggleSpam(true);
+  };
+  return (
+    <View>
+      <Pressable
+        onPress={handleLogout}
+        onPressIn={() => setPressedIn(true)}
+        onPressOut={() => setPressedIn(false)}
+        style={[
+          buttonStyles.button,
+          pressedIn ? { opacity: 0.4 } : { opacity: 1 },
+        ]}>
+        <Text style={buttonStyles.text}>Logout</Text>
+      </Pressable>
+    </View>
+  );
+};
+const DarkModeButton = ({ toggleDarkMode }) => {
   const [pressedIn, setPressedIn] = useState(false);
 
   return (
@@ -37,25 +76,7 @@ const DarkMode = ({ toggleDarkMode }) => {
     </View>
   );
 };
-const Logout = ({ onPressLogout }) => {
-  const [pressedIn, setPressedIn] = useState(false);
-
-  return (
-    <View>
-      <Pressable
-        onPress={onPressLogout}
-        onPressIn={() => setPressedIn(true)}
-        onPressOut={() => setPressedIn(false)}
-        style={[
-          buttonStyles.button,
-          pressedIn ? { opacity: 0.4 } : { opacity: 1 },
-        ]}>
-        <Text style={buttonStyles.text}>Logout</Text>
-      </Pressable>
-    </View>
-  );
-};
-export { Login, Logout, DarkMode };
+export { Login, Logout, DarkModeButton };
 const buttonStyles = StyleSheet.create({
   button: {
     justifyContent: "center",
