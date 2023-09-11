@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { DarkModeButton, Login, Logout } from "./components/Buttons";
-import { useState } from "react";
+import { DarkModeButton } from "./components/Buttons";
+import { useEffect, useState } from "react";
 
 import { login, logout } from "./utils/puwifi";
 export default function App() {
@@ -15,13 +15,50 @@ export default function App() {
   const [password, setPassword] = useState("");
   const [darkMode, setDarkMode] = useState(true);
   const [output, setOutput] = useState([]);
+  const [creds, setCreds] = useState([
+    { username: "200303124278", password: "bf@44" },
+    { username: "200303124264", password: "bf@66" },
+    { username: "200303124199", password: "cf@52" },
+  ]);
   const toggleDarkMode = () => {
     setDarkMode((prevDarkMode) => !prevDarkMode);
   };
-
-  const handleOutput = (text) => {
+  const handleOutput = (text: string) => {
     setOutput((prevOutput) => [...prevOutput, text]);
   };
+
+  function loginWithRandomCreds() {
+    const credsOf = Math.floor(Math.random() * creds.length);
+    const username = creds[credsOf].username;
+    const password = creds[credsOf].password;
+    login(username, password, handleOutput);
+  }
+  // useEffect(() => {
+  //   username && password && login(username, password, handleOutput);
+  // });
+  useEffect(() => {
+    let timerId;
+
+    if (username && password) {
+      // Clear any existing timer
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+
+      // Set a new timer to execute the login after 4 seconds
+      timerId = setTimeout(() => {
+        login(username, password, handleOutput);
+      }, 4000); // 4 seconds in milliseconds
+    }
+
+    // Cleanup the timer when the component unmounts or when dependencies change
+    return () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+    };
+  });
+
   return (
     <View
       style={[
@@ -47,22 +84,32 @@ export default function App() {
       <TouchableOpacity
         style={[styles.button]}
         onPress={() => {
-          login(username, password);
+          login(username, password, handleOutput);
         }}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => logout(username)}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          logout(username, handleOutput);
+        }}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.button]}
-        onPress={() => {
-          login(username, password);
-        }}>
-        <Text style={styles.buttonText}>LoginLoop</Text>
+        style={[styles.button, { width: 250 }]}
+        onPress={loginWithRandomCreds}>
+        <Text style={[styles.buttonText, { fontSize: 15 }]}>
+          Login Using Random Credentials
+        </Text>
       </TouchableOpacity>
       <View style={styles.container}>
-        <ScrollView>
+        <ScrollView
+          ref={(ref) => {
+            this.scrollView = ref;
+          }}
+          onContentSizeChange={() =>
+            this.scrollView.scrollToEnd({ animated: true })
+          }>
           {output.map((value, index) => {
             return (
               <Text style={styles.output} key={index}>
